@@ -1,27 +1,33 @@
+require('dotenv').config();
 const express = require ('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const routes = require('./src/routes');
 
 const app = express();
 
+const {
+  MONGODB_URI, PORT
+} = process.env;
+
 // parse json request body
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 //CORS
 app.use(cors());
 
-const PORT= process.env.PORT || 5000;
 
 // DB Connection
-
 mongoose
-  .connect('mongodb://127.0.0.1:27017/booklender')
+  .connect(MONGODB_URI)
   .then(() => console.log('DB connected...'));
 
 app.use('/api', routes);
 
 app.use((req, res) => {
-  res.send(404, 'Not found');
+  res.status(404).send('Not found');
 });
 
 app.listen(PORT, 
