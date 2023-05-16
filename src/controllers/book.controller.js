@@ -12,11 +12,7 @@ const getBooks = (req, res) => {
     });
   })
   .catch((err) =>{
-    res.status(500).json({
-      success: false,
-      message: 'Error getting books list',
-      error: err.message,
-    });
+    res.json(err);
   });
 };
 
@@ -28,6 +24,7 @@ const createBook = (req, res) => {
     published: req.body.published,
     genre: req.body.genre,
     stock: req.body.stock,
+    available: req.body.available,
   });
  
   book
@@ -40,9 +37,7 @@ const createBook = (req, res) => {
     });
   })
   .catch((err) =>{
-    res.status(500).json({
-      error: err.message,
-    });
+    res.json(err);
   });
 };
 
@@ -58,33 +53,38 @@ const findOneBook = (req, res) => {
     });
   })
   .catch((err) => {
-    return res.status(500).send({
-      message: "Error getting book "
-    });
-  });
-
+    res.json(err);
+  })
 };
 
 const updateBook = (req, res) => {
   Book
-  .findByIdAndUpdate(
-    req.params.id,
-    {
-      title: req.body.title,
-      author: req.body.author,
-      published: req.body.published,
-      genre: req.body.genre,
-      stock: req.body.stock,
-    },
-    { new: true})
+  .findByIdAndUpdate(req.params.id, req.body, {new:true})
   .then((data)=> {
-    res.send(data);
+    res.status(200).json({
+      success: true,
+      message: "Book data updated",
+      book: data,
+    });
   })
   .catch((err) => {
-    return res.status(500).send({
-      message: "Error updating book"
+    res.json(err);
+    })
+}
+
+const deleteBook = (req, res) =>{
+  Book
+  .findByIdAndDelete(req.params.id)
+  .then(data =>{
+    res.status(200).json({
+      success: true,
+      message: "Book deleted",
+      book: data,
     });
-  });
+  })
+  .catch((err)=> {
+    res.json(err);
+  })
 }
 
 module.exports = {
@@ -92,4 +92,5 @@ module.exports = {
   createBook,
   findOneBook,
   updateBook,
+  deleteBook,
 };

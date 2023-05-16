@@ -13,6 +13,7 @@ router
   router
   .route('/:id')
   .get( bookController.findOneBook)
-  .put( bookController.updateBook);
+  .put( bookController.updateBook)
+  .delete( bookController.deleteBook);
 
 module.exports = router;
