@@ -30,7 +30,7 @@ const createBook = (req, res) => {
   book
   .save()
   .then((data) => {
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: 'New book saved',
       book: data,

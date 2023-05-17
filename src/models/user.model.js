@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const saltRounds = 10; 
 
 const userSchema = mongoose.Schema({
   name: {
@@ -33,8 +31,12 @@ const userSchema = mongoose.Schema({
     type:Boolean,
     default: true 
   },
+  requested:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "requested"
+  }],
 });
 
-const Book = mongoose.model('users', userSchema);
+const User = mongoose.model('users', userSchema);
 
-module.exports = Book;
+module.exports = User;

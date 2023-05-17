@@ -5,15 +5,8 @@ const bookSchema = mongoose.Schema({
     type:String, 
     required: true
   },
-  author: {
-    type:String, 
-    required: true
-  },
   published: {
     type:Number,
-  },
-  genre: {
-    type:String, 
   },
   stock: {
     type:Number, 
@@ -22,6 +15,18 @@ const bookSchema = mongoose.Schema({
   available: {
     type:Number,
   },
+  author:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "authors" 
+  },
+  genre:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "genres"
+  },
+  requested:[{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "requested"
+  }],
 });
 
 const Book = mongoose.model('books', bookSchema);
