@@ -1,9 +1,11 @@
-const  Book = require ('../models/book.model');
+const {Book, Author, Genre} = require('../models/');
 
 // get Books
 const getBooks = (req, res) => {
   Book
   .find()
+  .populate({path:'author', model:Author})
+  .populate({path:'genre', model: Genre})
   .then((allBooks) => {
     res.status(200).json({
       success: true,
@@ -15,6 +17,7 @@ const getBooks = (req, res) => {
     res.json(err);
   });
 };
+
 
 const createBook = (req, res) => {
 
@@ -45,6 +48,8 @@ const findOneBook = (req, res) => {
  
   Book
   .findById(req.params.id)
+  .populate({path:'author', model:Author})
+  .populate({path:'genre', model: Genre})
   .then((data) => {
     res.status(200).json({
       success: true,

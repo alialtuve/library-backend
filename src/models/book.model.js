@@ -17,7 +17,7 @@ const bookSchema = mongoose.Schema({
   },
   author:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "authors" 
+    refPath: "authors" 
   },
   genre:{
     type: mongoose.Schema.Types.ObjectId,
@@ -25,7 +25,7 @@ const bookSchema = mongoose.Schema({
   },
   requested:[{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "requested"
+    ref: "requestedbooks"
   }],
 });
 

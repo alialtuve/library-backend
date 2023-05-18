@@ -1,4 +1,4 @@
-const  User = require ('../models/user.model');
+const  {User} = require ('../models/');
 const bcrypt = require('bcrypt');
 const saltRounds = 10; 
 
@@ -42,7 +42,8 @@ const createUSer = (req, res) =>{
     });
 };
 
+
+
 module.exports = {
   createUSer,
-
 };

@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
   },
   requested:[{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "requested"
+    ref: "requestedbooks"
   }],
 });
 
