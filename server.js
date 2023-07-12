@@ -26,7 +26,7 @@ mongoose
 app.use('/api', routes);
 
 app.use((req, res) => {
-  res.status(404).send('Not found');
+  res.status(202).send('Welcome to Book App');
 });
 
 app.listen(PORT, 

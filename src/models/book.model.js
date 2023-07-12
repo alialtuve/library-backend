@@ -23,10 +23,6 @@ const bookSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "genres"
   },
-  requested:[{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "requestedbooks"
-  }],
 });
 
 const Book = mongoose.model('books', bookSchema);

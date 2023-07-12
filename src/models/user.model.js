@@ -31,10 +31,6 @@ const userSchema = mongoose.Schema({
     type:Boolean,
     default: true 
   },
-  requested:[{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "requestedbooks"
-  }],
 });
 
 const User = mongoose.model('users', userSchema);

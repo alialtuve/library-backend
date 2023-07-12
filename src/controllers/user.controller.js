@@ -42,8 +42,22 @@ const createUSer = (req, res) =>{
     });
 };
 
-
+const getUsers = (req, res) => {
+  User
+  .find()
+  .then((allUsers) => {
+    res.status(200).json({
+      success: true,
+      message: 'List of users',
+      users: allUsers,
+    });
+  })
+  .catch((err) =>{
+    res.json(err);
+  });
+};
 
 module.exports = {
   createUSer,
+  getUsers,
 };

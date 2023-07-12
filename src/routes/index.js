@@ -3,7 +3,8 @@ const  express =  require('express');
 const bookRoute = require('./book.routes');
 const userRoute = require('./user.routes');
 const loginRoute = require('./login.route');
-const requestedbooks = require('./requestedbook.routes');
+const requestedRoute = require('./requestedbook.routes');
+const authorRoute = require('./author.routes');
 
 const router = express.Router();
 
@@ -22,7 +23,11 @@ const defaultRoutes = [
   },
   {
     path:'/request',
-    route: requestedbooks,
+    route: requestedRoute,
+  },
+  {
+    path:'/authors',
+    route: authorRoute,
   }
 ];
 
