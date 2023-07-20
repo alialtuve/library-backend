@@ -6,11 +6,12 @@ const router = express.Router();
 
 router
   .route('/')
-  .post( requestedBooksController.createRequested )
+  .post( requestedBooksController.createRequest )
   .get( requestedBooksController.getRequestedBooks );
-
+  
   router
   .route('/:id')
-  .get( requestedBooksController.getUSerBooks );
+  .get( requestedBooksController.getUSerBooks )
+  .put( requestedBooksController.returnBook);
 
   module.exports = router;

@@ -1,40 +1,69 @@
 const { RequestedBook, Book, User} = require('../models');
-const  { getBookAvailability } =  require('../middleware/validate');
+const  { getBookAvailability, searchBorrowed } =  require('../middleware/validate');
 
- 
-const createRequested = (req, res) => {
+ // Borrow a book
+const createRequest = (req, res) => {
 
   let available;
-  const id = req.body.book;
+  let conta;
+  const idBook = req.body.book;
+  const idUser = req.body.user;
 
   const reqBook = new RequestedBook({
     borrowDate: new Date(),
-    book: req.body.book,
-    user: req.body.user,
+    book: idBook,
+    user: idUser,
   });
 
-  const info = getBookAvailability(id)
+  const info = getBookAvailability(idBook)
     .then((data) => {
       available = data.available;
       if(available >= 1){
-        reqBook
-        .save()
-        .then((data) => {
-            res.status(201).json({
-              success: true,
-              message: 'operation saved',
-              book: data,
+
+            searchBorrowed(idBook, idUser)
+            .then((result)=>{
+               
+               if(result == 0){
+          
+                    reqBook
+                    .save()
+                    .then((data) => {
+
+                      Book.updateOne(
+                        {_id:idBook},
+                        {
+                          $inc:{ available: -1 }
+                        }).then(()=> {
+                  
+                          res.status(201).json({
+                            success: true,
+                            message: 'operation saved',
+                            book: data,
+                          })
+                        });
+                    })
+                    .catch((err) => {
+                      res.json(err);
+                    });
+
+              }
+              else {
+                res.json({
+                  success: false,
+                  message: 'user has borrowed',
+                  book: data.title,
+                });
+              }    
             })
-        })
-        .catch((err) => {
-          res.json(err);
-        });
+            .catch((err)=>{
+              res.json(err);
+            });
     }
     else {
       res.json({
         success: false,
         message: 'Book is not available',
-        book: data,
+        book: data.title,
       });
     }
   })
@@ -44,27 +73,34 @@ const createRequested = (req, res) => {
 }
 
 const returnBook = (req, res) => {
-
+    const returnedBook = req.body.book;
+    const id = req.params.id;
+   
     RequestedBook
     .findOneAndUpdate(
-        {
-          "user":req.params.user, 
-          "book":req.params.book
-        },
+        { _id: id},
         {
           $set: {
             status: true,
-            returnDate: Date,
+            returnDate: new Date(),
 
           }
         } 
       )
     .then((data) => {
-        res.status(200).json({
-          success: true,
-          message: 'Data updated',
-          book: data,
-        });
+      return new Promise((resolve, reject) => {
+        Book.updateOne(
+          {_id:returnedBook},
+          {
+            $inc:{ available: 1 }
+          }).then(()=> {
+            res.status(201).json({
+              success: true,
+              message: 'book availability updated',
+              book: data,
+            })
+          });
+       });
     })
     .catch((err) => {
       res.json(err);
@@ -82,7 +118,7 @@ const getRequestedBooks = (req, res) =>{
   .then((data) => {
     res.status(200).json({
       success: true,
-      message: 'List of requested books',
+      message: 'All Borrowed books',
       books: data,
     });
   })
@@ -95,13 +131,13 @@ const getRequestedBooks = (req, res) =>{
 const getUSerBooks = (req, res) => {
 
   RequestedBook
-  .find({user: req.params.id})
+  .find({user: req.params.id, status: false})
   .populate({path:'book', model:Book})
   .populate({path:'user', model: User})
   .then((data) => {
     res.status(200).json({
       success: true,
-      message: 'List of requested books',
+      message: 'User borrowed books',
       books: data,
     });
   })
@@ -111,7 +147,8 @@ const getUSerBooks = (req, res) => {
 }
 
 module.exports = {
-  createRequested,
+  createRequest,
   getRequestedBooks,
   getUSerBooks,
+  returnBook,
 };
